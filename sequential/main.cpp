@@ -12,7 +12,35 @@ void my_cost_function(double *p, struct sba_crsm *idxij,
   * as working memory
   */
   
-  
+  // idxij is documented in sba_levmar.c
+  /* sparse matrix containing the location of x_ij in x. This is also the location of A_ij 
+  * in jac, e_ij in e, etc.
+  * This matrix can be thought as a map from a sparse set of pairs (i, j) to a continuous
+  * index k and it is used to efficiently lookup the memory locations where the non-zero
+  * blocks of a sparse matrix/vector are stored
+  */
+    m=idxij->nc;
+  pa=p; pb=p+m*cnp;
+
+  for(j=0; j<m; ++j){
+    /* j-th camera parameters */
+    pqr=pa+j*cnp;
+    pt=pqr+3; // quaternion vector part has 3 elements
+    pr0=gl->rot0params+j*FULLQUATSZ; // full quat for initial rotation estimate
+    _MK_QUAT_FRM_VEC(lrot, pqr);
+    quatMultFast(lrot, pr0, trot); // trot=lrot*pr0
+
+    nnz=sba_crsm_col_elmidxs(idxij, j, rcidxs, rcsubs); /* find nonzero hx_ij, i=0...n-1 */
+
+    for(i=0; i<nnz; ++i){
+      ppt=pb + rcsubs[i]*pnp;
+      pmeas=hx + idxij->val[rcidxs[i]]*mnp; // set pmeas to point to hx_ij
+
+      calcImgProjFullR(Kparms, trot, pt, ppt, pmeas); // evaluate Q in pmeas
+      //calcImgProj(Kparms, pr0, pqr, pt, ppt, pmeas); // evaluate Q in pmeas
+    }
+  }
+
 }
 
 void my_cost_jacobian(double *p, struct sba_crsm *idxij,
