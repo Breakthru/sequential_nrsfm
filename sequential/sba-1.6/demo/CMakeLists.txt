@@ -1,12 +1,12 @@
 # CMake file for sba's demo program
 
-INCLUDE_DIRECTORIES(..)
-LINK_DIRECTORIES(.. ${LAPACKBLAS_DIR})
+INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/sba-1.6)
+LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/sba-1.6 ${LAPACKBLAS_DIR})
 
 ADD_EXECUTABLE(eucsbademo eucsbademo.c imgproj.c readparams.c eucsbademo.h readparams.h)
 # libraries the demo depends on
 IF(HAVE_F2C)
-  TARGET_LINK_LIBRARIES(eucsbademo sba ${LAPACK_LIB} ${BLAS_LIB} ${F2C_LIB})
+  TARGET_LINK_LIBRARIES(eucsbademo sba -lm ${LAPACK_LIB} ${BLAS_LIB})
 ELSE(HAVE_F2C)
   TARGET_LINK_LIBRARIES(eucsbademo sba ${LAPACK_LIB} ${BLAS_LIB} ${F77_LIB} ${I77_LIB})
 ENDIF(HAVE_F2C)
