@@ -11,33 +11,38 @@ void my_cost_function(double *p, struct sba_crsm *idxij,
   * rcidxs, rcsubs are max(m, n) x 1, allocated by the caller and can be used
   * as working memory
   */
-  
-  // idxij is documented in sba_levmar.c
+  int cnp = 2; // parameters per camera
+  int pnp = 3; // parameters per point
+  int mnp = 2; // measurements per point  
+  // idxij description copied from sba_levmar.c:
   /* sparse matrix containing the location of x_ij in x. This is also the location of A_ij 
   * in jac, e_ij in e, etc.
   * This matrix can be thought as a map from a sparse set of pairs (i, j) to a continuous
   * index k and it is used to efficiently lookup the memory locations where the non-zero
   * blocks of a sparse matrix/vector are stored
   */
-    m=idxij->nc;
-  pa=p; pb=p+m*cnp;
+  int  n_frames=idxij->nc;
+  double *pa=p; // camera parameters
+  double *pb=p+n_frames*cnp; // point parameters
 
-  for(j=0; j<m; ++j){
+  // pointer arithmetics everywhere
+  double *pcam; // parameter vector for one camera
+  double *ppt; // parameter vector for one point
+  double *pmeasurements; // measurements for one point
+  
+  // loop to compute hatx: measurements given parameters p
+  for(int j=0; j<n_frames; ++j){
     /* j-th camera parameters */
-    pqr=pa+j*cnp;
-    pt=pqr+3; // quaternion vector part has 3 elements
-    pr0=gl->rot0params+j*FULLQUATSZ; // full quat for initial rotation estimate
-    _MK_QUAT_FRM_VEC(lrot, pqr);
-    quatMultFast(lrot, pr0, trot); // trot=lrot*pr0
+    pcam=pa+j*cnp;
+    
+    int nnz=sba_crsm_col_elmidxs(idxij, j, rcidxs, rcsubs); /* find nonzero hx_ij, i=0...n-1 */
 
-    nnz=sba_crsm_col_elmidxs(idxij, j, rcidxs, rcsubs); /* find nonzero hx_ij, i=0...n-1 */
-
-    for(i=0; i<nnz; ++i){
+    for(int i=0; i<nnz; ++i){
+      // now compute projection of point i in frame j
       ppt=pb + rcsubs[i]*pnp;
-      pmeas=hx + idxij->val[rcidxs[i]]*mnp; // set pmeas to point to hx_ij
-
-      calcImgProjFullR(Kparms, trot, pt, ppt, pmeas); // evaluate Q in pmeas
-      //calcImgProj(Kparms, pr0, pqr, pt, ppt, pmeas); // evaluate Q in pmeas
+      pmeasurements=hx + idxij->val[rcidxs[i]]*mnp; // set pmeas to point to hx_ij
+      pmeasurements[0] = i + pcam[0]+pcam[1]; // mock use of camera parameters
+      pmeasurements[1] = j + ppt[0] + ppt[1] + ppt[2]; // mock use of points parameters
     }
   }
 
@@ -93,7 +98,7 @@ int main(int argc, char **argv) {
     double measurements[n_frames*n_points*mnp];
     double *m = measurements;
     // set some measurements that we try to fit our parameters to
-    for (int i=0 i<n_points; i++)
+    for (int i=0 ;i<n_points; i++)
       for (int j=0; j<n_frames; j++)
       {
 	// i-th point at the j-th image
@@ -105,7 +110,7 @@ int main(int argc, char **argv) {
     void *adata = NULL;
     int max_iterations = 100;
     int verbose = 5;
-    double opts[SBA_OPTSZ];
+    double opts[SBA_OPTSSZ];
     
     opts[0]=SBA_INIT_MU; opts[1]=SBA_STOP_THRESH; opts[2]=SBA_STOP_THRESH;
     opts[3]=SBA_STOP_THRESH; opts[4]=0.0;
