@@ -86,12 +86,19 @@ int main(int argc, char **argv) {
     for (int i=0; i < n_frames*cnp; i++)
     {
       parameters[i] = 0.0;          
-    }
+    }    
     // let's set all points parameters to some values
     for (int i=n_frames*cnp; i < n_frames*cnp+n_points*pnp; i++)
     {
       parameters[i] = 3.0;
     }
+    std::cout << "parameters vector: " << std::endl;
+    for (int i=0; i< n_frames*cnp+n_points*pnp; i++)
+    {
+      std::cout << parameters[i] << " , ";
+    }
+    std::cout << std::endl << "end parameters vector!" << std::endl;
+    
     
     double *covariance = NULL;
     int mnp = 2; // number of measurements for each point (usually 2: x and y positions)
@@ -135,5 +142,12 @@ int main(int argc, char **argv) {
 				     opts,
 				     info
 		 );
+    
+    std::cout << "parameters after optimization: " << std::endl;
+    for (int i=0; i< n_frames*cnp+n_points*pnp; i++)
+    {
+      std::cout << parameters[i] << " , ";
+    }
+    std::cout << std::endl << "end parameters vector!" << std::endl;
     return 0;
 }
