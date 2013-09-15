@@ -1,6 +1,7 @@
 #ifndef COSTFRAME_H
 #define COSTFRAME_H
 
+#include "cameraparameters.h"
 
 /**
  * @brief  cost function for time-varying parameters
@@ -12,6 +13,7 @@ class CostFrame
 {
 public:
     CostFrame();
+
 };
 
 #endif // COSTFRAME_H

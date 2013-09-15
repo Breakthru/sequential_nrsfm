@@ -1,6 +1,8 @@
 #ifndef CAMERAPARAMETERS_H
 #define CAMERAPARAMETERS_H
 
+#include <eigen3/Eigen/Geometry>
+
 /**
  * @brief The CameraParameters class encapsulates all
  * parameters that vary per-frame, such as:

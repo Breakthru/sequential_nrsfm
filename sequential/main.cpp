@@ -1,13 +1,7 @@
 #include <iostream>
 #include <sba.h>
-#include "cameraparameters.h"
+#include "costframe.h"
 
-
-void test()
-{
-    double something[3];
-    CameraParameters<double> p(something);
-}
 
 void my_cost_function(double *p, struct sba_crsm *idxij,
 		      int *rcidxs, int *rcsubs,
