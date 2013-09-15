@@ -1,5 +1,7 @@
 #include "cameraparameters.h"
 
-CameraParameters::CameraParameters()
+CameraParameters::CameraParameters(T *parameters)
 {
+    // just copy the pointer
+    p_ = parameters;
 }

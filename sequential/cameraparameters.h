@@ -10,10 +10,22 @@
  * This class is used to convert a vector of parameters
  * into camera specific matrices
  */
-class CameraParameters
+template<class T> class CameraParameters
 {
+    T* p_;
 public:
-    CameraParameters();
+    /**
+     * @brief CameraParameters encapsulates the parameter vector
+     * @param parameters
+     * camera translation (tx,ty,tz)
+     * camera rotation as a quaternion (q1,q2,q3,q4)
+     * deformation coefficients (d_1,...,d_r)
+     */
+    CameraParameters(T* parameters)
+    {
+        p_ = parameters;
+    }
+
 };
 
 #endif // CAMERAPARAMETERS_H
