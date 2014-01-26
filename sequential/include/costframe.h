@@ -1,12 +1,8 @@
 #ifndef COSTFRAME_H
 #define COSTFRAME_H
 
-#include "cameraparameters.h"
+#include "camera.h"
 
-// measurements per point
-#define MNP 2
-// parameters per point
-#define PNP 3
 
 /**
  * @brief  cost function for time-varying parameters
@@ -59,13 +55,14 @@ public:
 
 
 
+    /// parameters are [camera parameters... shape parameters]
     /// [u v] = projection( pt, camera )
     T compute(const T * params)
     {
 
         T residual=0;
         shape_->compute(params[shape_param_idx_],pts_);
-        camera_->project(params, pts_, projections_);
+        camera_->project(params, pts_, num_points_, projections_);
         const int t=num_points_*MNP;
         for (int j=0; j<t; j++) {
             T r = measurements_[j]-projections_[j];
