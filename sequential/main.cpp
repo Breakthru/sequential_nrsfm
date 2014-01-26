@@ -3,6 +3,23 @@
 #include "costframe.h"
 
 
+struct global_
+{
+    int rank; // rank of model
+} global;
+
+void camera_track_cost(double *p, struct sba_crsm *idxij,
+                       int *rcidxs, int *rcsubs,
+                       double *hx, void *adata)
+{
+    struct global_ *gl;
+    gl=(struct global_ *)adata;
+    int cnp = 7+3*gl->rank; // parameters per camera
+    int pnp = 3; // parameters per point
+    int mnp = 2; // measurements per point
+
+}
+
 void my_cost_function(double *p, struct sba_crsm *idxij,
 		      int *rcidxs, int *rcsubs,
 		      double *hx, void *adata)
