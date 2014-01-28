@@ -6,13 +6,12 @@
 #include "synthdata.h"
 
 BOOST_AUTO_TEST_CASE( camera ) {
-    double *params;
+
+    double params[6];
     RigidShape<double> *shape;
     make_synth_data(params,shape);
     OrthographicCamera<double> camera;
     double measurements[shape->num_points()];
     camera.project(params,shape->pts_,shape->num_points(),measurements);
 
-
-    delete []params;
 }

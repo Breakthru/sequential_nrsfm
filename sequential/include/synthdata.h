@@ -13,12 +13,11 @@ void make_synth_data(double *params, RigidShape<double> *shape )
 
     shape = new RigidShape<double>(pts, num_points);
 
-    params = new double [6];
     params[0]=1;
     for (int i=1;i<6; i++)
         params[i]=0;
 
-    delete []pts;
+    delete[] pts;
 }
 
 #endif // SYNTHDATA_H
