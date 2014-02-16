@@ -19,7 +19,7 @@ public:
         if (num_points_<=0)
             throw std::invalid_argument("a rigid shape must have at least one point");
 
-        pts_ = new T[num_points_];
+        pts_ = new T[num_points_*PNP];
         for (int i=0; i < num_points*PNP; ++i) {
             pts_[i]=pts[i];
         }
