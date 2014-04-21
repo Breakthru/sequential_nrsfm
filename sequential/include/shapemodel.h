@@ -31,7 +31,9 @@ public:
 
     int num_points() const { return num_points_; }
     void compute(const T* , T* pts) {
-        pts = pts_;
+        for (int i=0; i < num_points_*PNP; ++i) {
+            pts[i] = pts_[i];
+        }
     }
 };
 

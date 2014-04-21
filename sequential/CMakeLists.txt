@@ -9,12 +9,12 @@ add_subdirectory(sba-1.6)
 INCLUDE_DIRECTORIES(${CMAKE_SOURCE_DIR}/sba-1.6 include)
 LINK_DIRECTORIES(${CMAKE_SOURCE_DIR}/sba-1.6 ${LAPACKBLAS_DIR})
 
-add_executable(sequential src/main.cpp)
+add_executable(sequential src/main.cpp include/costframe.h include/camera.h)
 TARGET_LINK_LIBRARIES(sequential sba -lm ${LAPACK_LIB} ${BLAS_LIB})
 
 install(TARGETS sequential RUNTIME DESTINATION bin)
 
-add_executable(testSynthData test/testSynthData.cpp)
+add_executable(testSynthData test/testSynthData.cpp include/synthdata.h)
 TARGET_LINK_LIBRARIES(testSynthData ${Boost_LIBRARIES})
 enable_testing()
 add_test(synthdata testSynthData)

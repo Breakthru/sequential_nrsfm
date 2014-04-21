@@ -20,11 +20,11 @@ public:
     T *measurements_;
     int shape_param_idx_;
     int num_points_;
-    const CameraModel *camera_;
-    const ShapeModel *shape_;
+    CameraModel *camera_;
+    ShapeModel *shape_;
     T *projections_;
 
-    CostFrame(const T* measurements, const CameraModel *camera, const ShapeModel *shape):
+    CostFrame(const T* measurements, CameraModel *camera, ShapeModel *shape):
         pts_(NULL),
         measurements_(NULL),
         shape_param_idx_(0),
@@ -61,7 +61,7 @@ public:
     {
 
         T residual=0;
-        shape_->compute(params[shape_param_idx_],pts_);
+        shape_->compute(&params[shape_param_idx_],pts_);
         camera_->project(params, pts_, num_points_, projections_);
         const int t=num_points_*MNP;
         for (int j=0; j<t; j++) {

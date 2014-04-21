@@ -14,5 +14,6 @@ BOOST_AUTO_TEST_CASE( camera ) {
     double measurements[shape->num_points()*MNP];
     camera.project(params,shape->pts_,shape->num_points(),measurements);
 
-
+    CostFrame<double,OrthographicCamera<double>,RigidShape<double> > costfun(measurements, &camera, shape.get());
+    std::cout << "cost for one frame: " << costfun.compute(params) << std::endl;
 }
