@@ -20,4 +20,9 @@ void make_synth_data(double *params, boost::shared_ptr<RigidShape<double> > *sha
 
 }
 
+void make_nr_synth_data(double *params, boost::shared_ptr<RigidShape<double> > *shape)
+{
+
+}
+
 #endif // SYNTHDATA_H

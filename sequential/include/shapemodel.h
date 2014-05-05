@@ -37,4 +37,45 @@ public:
     }
 };
 
+template<class T>
+class NonRigidShape {
+public:
+    T *pts_;
+    int num_points_;
+    int K_;
+    T *bases_;
+
+    NonRigidShape(const T *bases, int num_points, int K):
+        num_points_(num_points),
+        K_(K)
+    {
+        bases_=new T[PNP*K*num_points];
+        for (int k=0; k<K; k++)
+        {
+            for (int i=0; i < num_points*PNP; ++i)
+            {
+                bases_[k*num_points*PNP+i]=bases[k*num_points*PNP+i];
+            }
+        }
+    }
+
+    int num_points() const { return num_points_; }
+    int num_bases() const { return K_; }
+    /// params are the coefficients, vector of K elements
+    void compute(const T* params, T* pts) {
+        // init points to zero
+        for (int i=0; i < num_points_*PNP; ++i) {
+            pts[i] = 0;
+        }
+        // sum coeff. times base
+        for (int k=0; k<K_; k++)
+        {
+            for (int i=0; i < num_points*PNP; ++i)
+            {
+                pts[i]=params[k]*bases_[k*num_points*PNP+i];
+            }
+        }
+    }
+};
+
 #endif // SHAPEMODEL_H
